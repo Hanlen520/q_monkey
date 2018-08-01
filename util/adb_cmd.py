@@ -44,9 +44,9 @@ class ADB_CMD(object):
         for r in os.popen(cmd, 'r').readlines():
             if r.strip().endswith('monkey'):
                 pids.append(r.strip().split()[1])
-        if pids.__le__() == 0:
+        if pids.__len__() == 0:
             pass
-        elif pids.__le__() > 0:
+        elif pids.__len__() > 0:
             for pid in pids:
                 cmd = 'adb shell kill %s' % pid
                 os.popen(cmd, 'r')
