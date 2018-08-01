@@ -20,7 +20,7 @@ class ADB_CMD(object):
         elif result.__le__() >= 1:
             for r in result:
                 if r.strip().endswith('device'):
-                    logger.info("Device Name: %s" %r.strip().split('\t')[0])
+                    logger.info("Device Name: %s" % r.strip().split('\t')[0])
                     devices_id.append(r.strip().split('\t')[0])
 
     def start_adb(self):
@@ -33,9 +33,11 @@ class ADB_CMD(object):
         logger.info("Run CMD: adb kill-server")
         os.popen(cmd, 'r')
 
-    def start_monkey(self, cmd,f_name):
+    def start_monkey(self, cmd, f_name):
         logger.info("Monkey Start")
-        os.popen('cmd >%s' % f_name,'r')
+        monkey_cmd = '%s > "%s"' % (cmd, f_name)
+        logger.info('Monkey CMD is "%s"' % monkey_cmd)
+        os.popen(monkey_cmd, 'r')
         logger.info("Monkey Finish")
 
     def stop_monkey(self):
@@ -60,9 +62,11 @@ class ADB_CMD(object):
 
     def set_up_jar(self):
         monkey_path = os.path.join(os.getcwd() + os.path.sep + 'Maxim', 'monkey.jar')
+        logger.info("Monkey.jar path is %s" % monkey_path)
         framework_path = os.path.join(os.getcwd() + os.path.sep + 'Maxim', 'framework.jar')
-        os.popen('adb push %s /sdcard/' % monkey_path, 'r')
-        os.popen('adb push %s /sdcard/' % framework_path, 'r')
+        logger.info("Framework.jar Path is %s" % framework_path)
+        os.popen('adb push "%s" /sdcard/' % monkey_path, 'r')
+        os.popen('adb push "%s" /sdcard/' % framework_path, 'r')
 
     def install_adb_keyboard(self):
         cmd = 'adb shell pm list packages -3 | grep com.android.adbkeyboard'
@@ -70,7 +74,7 @@ class ADB_CMD(object):
         if results.__len__() == 0:
             adb_keyboard_apk_path = os.path.join(os.getcwd() + os.path.sep + 'Maxim' + os.path.sep + 'test',
                                                  'ADBKeyBoard.apk')
-            os.popen('adb install %s' % adb_keyboard_apk_path, 'r')
+            os.popen('adb install "%s"' % adb_keyboard_apk_path, 'r')
 
     def clear_logs(self):
         os.popen('adb shell logcat -c', 'r')
@@ -79,7 +83,7 @@ class ADB_CMD(object):
         os.popen('adb shell rm /sdcard/oom-traces.log', 'r')
 
     def pull_crash_log(self, path):
-        result = os.popen('adb shell ls /sdcard/ | grep crash-dump.log','r').readlines()
+        result = os.popen('adb shell ls /sdcard/ | grep crash-dump.log', 'r').readlines()
         cmd = 'adb pull /sdcard/crash-dump.log %s' % path
         if result.__len__() > 0:
             os.popen(cmd, 'r')
@@ -88,7 +92,7 @@ class ADB_CMD(object):
             pass
 
     def pull_oom_log(self, path):
-        result = os.popen('adb shell ls /sdcard/ | grep oom-tr*.log','r').readlines()
+        result = os.popen('adb shell ls /sdcard/ | grep oom-tr*.log', 'r').readlines()
         cmd = 'adb pull /sdcard/oom-traces.log %s' % path
         if result.__len__() > 0:
             os.popen(cmd, 'r')
