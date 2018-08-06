@@ -86,6 +86,7 @@ class ADB_CMD(object):
         result = os.popen('adb shell ls /sdcard/ | grep crash-dump.log', 'r').readlines()
         cmd = 'adb pull /sdcard/crash-dump.log %s' % path
         if result.__len__() > 0:
+            logger.info('pull_crash_log_cmd: %s' % cmd)
             os.popen(cmd, 'r')
         else:
             logger.info("No crash-dump file found")
@@ -95,6 +96,7 @@ class ADB_CMD(object):
         result = os.popen('adb shell ls /sdcard/ | grep oom-tr*.log', 'r').readlines()
         cmd = 'adb pull /sdcard/oom-traces.log %s' % path
         if result.__len__() > 0:
+            logger.info('pull_oom_log_cmd: %s' % cmd)
             os.popen(cmd, 'r')
         else:
             logger.info("No oom-traces.log found")
@@ -120,4 +122,5 @@ class ADB_CMD(object):
         for l in logs:
             cmd = "adb pull /sdcard/%s %s" % (l, log_path)
             os.popen(cmd, 'r')
+        logger.info(logs)
         return logs
